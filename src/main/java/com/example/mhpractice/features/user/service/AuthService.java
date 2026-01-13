@@ -8,4 +8,8 @@ public interface AuthService {
 
     public LoginResult login(String email, String password);
 
+    public LoginResult refreshToken(String refreshToken);
+
+    public void logout(String refreshToken);
+
 }

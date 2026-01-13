@@ -5,6 +5,22 @@ spring:
   application:
     name: mhpractice
   profiles:
-    active: dev
+    active: local
+  thread:
+    virtual:
+      enabled: true
 
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+app:
+  jwt:
+    secret: secretKey
+    encryption-key: encryptionKey
+    expiration-ms: ms
+    refresh-expiration-ms: ms
+
+  cookie: 
+    secure: true
 
