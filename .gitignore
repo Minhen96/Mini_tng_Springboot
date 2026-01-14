@@ -41,6 +41,7 @@ reference/
 
 ### Application ###
 application-local.yaml
+application-prod.yaml
 
 ### Logs ###
 logs/

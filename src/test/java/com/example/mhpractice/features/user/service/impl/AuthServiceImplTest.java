@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.never;
@@ -92,7 +93,7 @@ public class AuthServiceImplTest {
         String refreshToken = "refresh-token";
 
         User user = User.builder()
-                .id("1L")
+                .id(UUID.randomUUID())
                 .email(email)
                 .password(password)
                 .build();
@@ -132,7 +133,7 @@ public class AuthServiceImplTest {
         String newRefreshToken = "new-refresh-token";
 
         User user = User.builder()
-                .id("user-123")
+                .id(UUID.randomUUID())
                 .email("test@example.com")
                 .build();
 
@@ -165,7 +166,7 @@ public class AuthServiceImplTest {
 
         RefreshToken storedToken = RefreshToken.builder()
                 .token(expiredToken)
-                .user(User.builder().id("user-123").email("test@example.com").build())
+                .user(User.builder().id(UUID.randomUUID()).email("test@example.com").build())
                 .expiresAt(LocalDateTime.now().minusDays(1)) // ← Expired!
                 .build();
 

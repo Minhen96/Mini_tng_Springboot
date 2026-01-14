@@ -15,7 +15,16 @@ spring:
   logging:
     level:
       root: INFO
-
+      
+  mail:
+    host: localhost
+    port: 1025
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls: 
+            enabled: false
 app:
   jwt:
     secret: secretKey
