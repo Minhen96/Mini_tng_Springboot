@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.mhpractice.common.http.annotation.StandardReponseBody;
 import com.example.mhpractice.features.user.controller.request.ProfileRequest;
 import com.example.mhpractice.features.user.controller.response.UserProfileResponse;
 import com.example.mhpractice.features.user.service.UserService;
@@ -16,8 +17,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
+@StandardReponseBody
 public class UserProfileController {
 
     private final UserService userService;
