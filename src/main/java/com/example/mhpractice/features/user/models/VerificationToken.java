@@ -51,11 +51,9 @@ public class VerificationToken {
     @Builder.Default
     private boolean used = false;
 
-    @Column(name = "ip_address", nullable = false)
+    // can do rate limiting in future
+    @Column(name = "ip_address")
     private String ipAddress;
-
-    @Column(name = "device_fingerprint")
-    private String deviceFingerprint;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

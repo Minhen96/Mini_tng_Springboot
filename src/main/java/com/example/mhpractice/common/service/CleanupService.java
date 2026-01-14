@@ -18,7 +18,7 @@ public class CleanupService {
 
     private final OtpResendTrackingRepository otpResendTrackingRepository;
 
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "${app.scheduler.cleanup-cron}")
     public void cleanupExpiredTokens() {
         verificationTokenRepository.deleteAllByExpiresAtBefore(LocalDateTime.now());
         otpResendTrackingRepository.deleteAllByResetAtBefore(LocalDateTime.now().minusHours(24));

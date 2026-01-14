@@ -1,9 +1,54 @@
 services:
+
+  # service-name:
+  #   image: image-name:tag
+  #   container_name: container-name
+  #   environment:
+  #     - ENV_VAR=value
+  #   ports:
+  #     - "host_port:container_port"
+  #   volumes:
+  #     - host_path:container_path
+  #   depends_on:
+  #     - dependency_service
+  #   restart: unless-stopped
+
   postgres:
-    image: 'postgres:latest'
+    image: postgres:latest
+    container_name: mhpractice-postgres
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - '5432'
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: mhpractice-pgadmin
+    profiles:
+      - dev
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5055:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mhpractice-mailhog
+    ports:
+      - "1026:1025"
+      - "8026:8025"
+
+volumes:
+  postgres_data:
+  pgadmin_data:
