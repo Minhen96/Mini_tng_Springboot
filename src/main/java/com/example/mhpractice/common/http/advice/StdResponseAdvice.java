@@ -7,7 +7,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import com.example.mhpractice.common.http.annotation.StandardReponseBody;
 
-import java.lang.reflect.AnnotatedElement;
 import org.springframework.core.io.Resource;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotatedElementUtils;
