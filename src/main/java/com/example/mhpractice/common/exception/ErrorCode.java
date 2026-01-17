@@ -20,6 +20,12 @@ public enum ErrorCode {
     OTP_MAX_RESEND_EXCEEDED("OTP_401", "OTP max resend exceeded"),
     OTP_REQUEST_TOO_FREQUENT("OTP_401", "OTP request too frequent"),
 
+    WALLET_NOT_FOUND("WALLET_404", "Wallet not found"),
+    WALLET_ALREADY_EXISTS("WALLET_409", "Wallet already exists"),
+    INSUFFICIENT_BALANCE("WALLET_401", "Insufficient balance"),
+    TRANSACTION_NOT_FOUND("WALLET_404", "Transaction not found"),
+    TRANSACTION_INTERNAL_ERROR("TRANSACTION_500", "Transaction internal error"),
+
     EMAIL_SERVER_ERROR("EMAIL_500", "Email server error");
 
     private final String code;

@@ -123,6 +123,19 @@
 			<artifactId>spring-kafka</artifactId>
 		</dependency>
 
+		<!-- Redisson -->
+		<dependency>
+			<groupId>org.redisson</groupId>
+			<artifactId>redisson-spring-boot-starter</artifactId>
+			<version>3.17.6</version>
+		</dependency>
+
+		<!-- Jackson datatype for Java 8 time (LocalDateTime, etc.) -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
