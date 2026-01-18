@@ -27,6 +27,29 @@ public class TransferOrchestrator {
     private final WalletService walletService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
+    /**
+     * Scenario 1: Happy Path (Success)
+     * 1. DB Updates (transferOut, transferIn) execute.
+     * 2. Kafka Send executes (successfully queues message).
+     * 3. Method Ends → @Transactional commits the DB changes.
+     * Result: DB updated, Message sent. ✅ OK.
+     * 
+     * Scenario 2: DB Error
+     * 1. DB Updates fail (e.g., insufficient funds).
+     * 2. Exception thrown.
+     * 3. Kafka Send is SKIPPED (code jumps to catch).
+     * 4. DB Rolls back.
+     * Result: No DB change, No Message sent. ✅ OK.
+     * 
+     * Scenario 3: Kafka Send Error
+     * 1. DB Updates execute OK.
+     * 2. Kafka Send fails (e.g., broker down).
+     * 3. Exception thrown.
+     * 4. Method Ends (with exception).
+     * 5. DB Transaction Rolls back (because exception bubbled up).
+     * Result: DB changes reverted, No Message sent. ✅ OK.
+     * 
+     */
     @Transactional
     public void executeTransfer(UUID fromWalletId, UUID toWalletId, BigDecimal amount) {
         String transactionId = UUID.randomUUID().toString();

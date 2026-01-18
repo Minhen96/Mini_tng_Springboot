@@ -168,10 +168,11 @@ public class WalletServiceImpl implements WalletService {
                 throw new IllegalStateException("Transfer not ready to confirm");
             }
 
-            // 1. Deduct from frozen balance
+            // 1. Deduct sender's frozen balance and real balance
             Wallet fromWallet = walletRepository.findByIdWithLock(record.getFromWallet().getId())
                     .orElseThrow();
-            fromWallet.deductFrozenBalance(record.getAmount());
+            fromWallet.clearFrozenBalance(record.getAmount());
+
             walletRepository.save(fromWallet);
 
             // 2. Release from unreleased balance

@@ -3,6 +3,7 @@ package com.example.mhpractice.features.user.controller;
 import com.example.mhpractice.features.user.service.AuthService;
 import com.example.mhpractice.features.user.service.OtpService;
 import com.example.mhpractice.features.user.service.result.LoginResult;
+import com.example.mhpractice.features.wallet.service.WalletService;
 import com.example.mhpractice.features.user.controller.request.RegisterRequest;
 import com.example.mhpractice.features.user.controller.request.VerifyOtpRequest;
 import com.example.mhpractice.common.http.annotation.StandardReponseBody;
@@ -10,6 +11,7 @@ import com.example.mhpractice.features.notification.service.NotificationService;
 import com.example.mhpractice.features.user.controller.request.LoginRequest;
 import com.example.mhpractice.features.user.controller.request.RefreshTokenRequest;
 import com.example.mhpractice.features.user.controller.response.LoginResponse;
+import com.example.mhpractice.features.user.models.User;
 import com.example.mhpractice.features.user.models.VerificationToken.OtpPurposes;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,8 @@ public class AuthController {
 
     private final OtpService otpService;
 
+    private final WalletService walletService;
+
     private final NotificationService notificationService;
 
     @Value("${app.cookie.secure:false}")
@@ -52,6 +56,8 @@ public class AuthController {
                 generateIpAddress(httpRequest));
 
         if (verifyOtp) {
+            User user = authService.getUserByEmail(request.getEmail());
+            walletService.createWallet(user);
             notificationService.sendWelcomeEmail(request.getEmail());
         }
 

@@ -96,6 +96,11 @@ public class Wallet {
         this.unreleasedBalance = this.unreleasedBalance.subtract(amount);
     }
 
+    public void clearFrozenBalance(BigDecimal amount) {
+        this.frozenBalance = this.frozenBalance.subtract(amount);
+        this.balance = this.balance.subtract(amount);
+    }
+
     public void releaseUnreleasedBalance(BigDecimal amount) {
         this.unreleasedBalance = this.unreleasedBalance.subtract(amount);
         this.balance = this.balance.add(amount);

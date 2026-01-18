@@ -46,6 +46,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    @Override
     public LoginResult login(String email, String password) {
         // User user = userRepository.findByEmail(email)
         // .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));

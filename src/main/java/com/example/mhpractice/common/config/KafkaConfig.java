@@ -94,8 +94,9 @@ public class KafkaConfig {
 
         // Trust only your event packages
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "com.example.mhpractice.features.wallet.event");
-        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.example.mhpractice.features.wallet.event.TransferEvent");
+        props.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, true);
+        // props.put(JsonDeserializer.VALUE_DEFAULT_TYPE,
+        // "com.example.mhpractice.features.wallet.event.TransferRequestEvent");
 
         return new DefaultKafkaConsumerFactory<>(props);
     }

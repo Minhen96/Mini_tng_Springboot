@@ -37,8 +37,11 @@ public class WalletController {
         Wallet fromWallet = walletService.getWalletByUserId(currentUser.getId());
         Wallet toWallet = walletService.getWalletByUserId(request.getToUserId());
 
-        kafkaTemplate.send("transfer.events.request",
-                TransferRequestEvent.of(fromWallet.getId(), toWallet.getId(), request.getAmount()));
+        kafkaTemplate.executeInTransaction(operations -> {
+            operations.send("transfer.events.request", TransferRequestEvent.of(fromWallet.getId(), toWallet.getId(),
+                    request.getAmount()));
+            return null;
+        });
 
         return ResponseEntity.ok(Map.of("message", "Transfer initiated successfully"));
     }
