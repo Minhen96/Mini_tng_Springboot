@@ -4,13 +4,11 @@ A Spring Boot microservices-based e-wallet application with production-grade OTP
 
 ## 🎯 Project Status
 
-**Current Phase**: Authentication & Email Verification ✅
+**Current Phase**: Wallet & Transaction Services / Observability ✅
 - User Registration with OTP Verification
 - JWT-based Authentication
-- Email Service with MailHog
-- Scheduled Cleanup Jobs
-
-**Next Phase**: Wallet & Transaction Services 🔜
+- Wallet Management (Transfer, Idempotency)
+- Observability Stack (Prometheus, Grafana)
 
 ## ✨ Features
 
@@ -23,6 +21,21 @@ A Spring Boot microservices-based e-wallet application with production-grade OTP
 - Refresh tokens (7 day expiry)
 - HTTP-only secure cookies
 - Rate limiting with resend tracking
+
+#### Wallet & Transactions
+- Create Wallet for users
+- Intra-wallet transfers (TransferOut -> TransferIn)
+- **Saga Pattern** for distributed transaction safety
+- **Idempotency** using Transaction IDs
+- **Compensating Transactions** (Rollback) on failure
+- Redis Distributed Locking (Redisson)
+
+#### Observability & Monitoring
+- **Prometheus** for metric scraping
+- **Grafana** for dashboard visualization
+- **Micrometer** for custom application metrics
+- `@Timed` annotation for performance tracking
+- Actuator endpoints for health/info
 
 #### Email Service
 - HTML email templates with Thymeleaf
@@ -44,6 +57,7 @@ A Spring Boot microservices-based e-wallet application with production-grade OTP
 - Virtual threads enabled (Java 21+)
 - Docker Compose for services
 - Scheduled tasks for maintenance
+- **Kafka** for event-driven architecture
 
 ### Planned 🔜
 
@@ -80,7 +94,7 @@ cd mhpractice
 
 ### 2. Start Services
 ```bash
-# Start PostgreSQL and MailHog
+# Start Databases, Kafka, Zookeeper, MailHog, Prometheus, Grafana
 docker-compose up -d
 
 # With pgAdmin (optional)
@@ -94,15 +108,20 @@ mvn spring-boot:run
 
 ### 4. Access Services
 - **API**: http://localhost:8088
+- **Grafana**: http://localhost:3001 (Login: admin/admin)
+- **Prometheus**: http://localhost:9091
 - **MailHog UI**: http://localhost:8026
 - **pgAdmin**: http://localhost:5055 (if using dev profile)
-
 ## 📊 Service Ports
 
 | Service         | Port | Description      |
 | --------------- | ---- | ---------------- |
 | Spring Boot API | 8088 | Main application |
 | PostgreSQL      | 5435 | Database         |
+| Redis           | 6380 | Distributed Lock |
+| Kafka Broker    | 9092 | Event Streaming  |
+| Prometheus      | 9091 | Metrics Scraper  |
+| Grafana         | 3001 | Dashboards       |
 | MailHog SMTP    | 1026 | Email server     |
 | MailHog Web UI  | 8026 | Email viewer     |
 | pgAdmin         | 5055 | Database UI      |

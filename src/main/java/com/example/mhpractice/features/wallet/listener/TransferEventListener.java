@@ -25,7 +25,8 @@ public class TransferEventListener {
     @KafkaListener(topics = "transfer.events.request", groupId = "wallet-service-group")
     public void handleTransferRequest(TransferRequestEvent event) {
         log.info("📨 Processing transfer request");
-        transferOrchestrator.executeTransfer(event.getFromWalletId(), event.getToWalletId(), event.getAmount());
+        transferOrchestrator.executeTransfer(event.getFromWalletId(), event.getToWalletId(), event.getAmount(),
+                event.getTransactionId());
     }
 
     @KafkaListener(topics = "transfer.events.success", groupId = "notification-group")

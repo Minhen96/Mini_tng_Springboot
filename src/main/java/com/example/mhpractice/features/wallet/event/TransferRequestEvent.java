@@ -16,13 +16,15 @@ public class TransferRequestEvent {
     private UUID fromWalletId;
     private UUID toWalletId;
     private BigDecimal amount;
+    private String transactionId;
 
     // Helper factory method
-    public static TransferRequestEvent of(UUID fromWalletId, UUID toWalletId, BigDecimal amount) {
+    public static TransferRequestEvent of(UUID fromWalletId, UUID toWalletId, BigDecimal amount, String transactionId) {
         return TransferRequestEvent.builder()
                 .fromWalletId(fromWalletId)
                 .toWalletId(toWalletId)
                 .amount(amount)
+                .transactionId(transactionId)
                 .build();
     }
 }

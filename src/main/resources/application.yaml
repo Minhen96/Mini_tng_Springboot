@@ -48,3 +48,12 @@ app:
 
   scheduler:
     cleanup-cron: "0 0 0 * * ?"  # Daily at midnight
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, info, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}

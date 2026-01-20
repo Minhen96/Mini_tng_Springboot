@@ -204,8 +204,14 @@ public class WalletServiceImpl implements WalletService {
         try {
             lock.lock(10, TimeUnit.SECONDS);
 
-            Transaction record = transactionRepository.findByTransactionId(transactionId)
-                    .orElseThrow();
+            var transactionOpt = transactionRepository.findByTransactionId(transactionId);
+            if (transactionOpt.isEmpty()) {
+                // If transaction record doesn't exist, it means failure happened before
+                // persistence.
+                // Nothing to rollback.
+                return;
+            }
+            Transaction record = transactionOpt.get();
 
             // Unfreeze sender's balance
             Wallet fromWallet = walletRepository.findByIdWithLock(record.getFromWallet().getId())

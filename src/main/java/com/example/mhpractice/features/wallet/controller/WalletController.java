@@ -1,6 +1,7 @@
 package com.example.mhpractice.features.wallet.controller;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -34,12 +35,15 @@ public class WalletController {
             Authentication authentication) {
 
         User currentUser = userService.getUserByEmail(authentication.getName());
+        User targetUser = userService.getUserByEmail(request.getEmail());
         Wallet fromWallet = walletService.getWalletByUserId(currentUser.getId());
-        Wallet toWallet = walletService.getWalletByUserId(request.getToUserId());
+        Wallet toWallet = walletService.getWalletByUserId(targetUser.getId());
+
+        String transactionId = UUID.randomUUID().toString();
 
         kafkaTemplate.executeInTransaction(operations -> {
             operations.send("transfer.events.request", TransferRequestEvent.of(fromWallet.getId(), toWallet.getId(),
-                    request.getAmount()));
+                    request.getAmount(), transactionId));
             return null;
         });
 

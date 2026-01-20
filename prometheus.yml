@@ -1,0 +1,6 @@
+scrape_configs:
+  - job_name: "application"
+    metrics_path: "/actuator/prometheus"
+    static_configs:
+      # - targets: ["localhost:8080"]  # this will point to container 8080 if prometheus is run in docker
+      - targets: ["host.docker.internal:8088"]  # this will point to host machine 8088    

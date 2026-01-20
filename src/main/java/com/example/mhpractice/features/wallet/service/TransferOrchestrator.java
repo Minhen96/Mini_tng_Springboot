@@ -3,6 +3,8 @@ package com.example.mhpractice.features.wallet.service;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import io.micrometer.core.annotation.Timed;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +28,7 @@ public class TransferOrchestrator {
      */
     private final WalletService walletService;
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final MeterRegistry meterRegistry;
 
     /**
      * Scenario 1: Happy Path (Success)
@@ -50,10 +53,11 @@ public class TransferOrchestrator {
      * Result: DB changes reverted, No Message sent. ✅ OK.
      * 
      */
+    @Timed(value = "wallet.transfer.time", percentiles = { 0.5, 0.9, 0.95, 0.99 }, description = "Wallet transfer time")
     @Transactional
-    public void executeTransfer(UUID fromWalletId, UUID toWalletId, BigDecimal amount) {
-        String transactionId = UUID.randomUUID().toString();
+    public void executeTransfer(UUID fromWalletId, UUID toWalletId, BigDecimal amount, String transactionId) {
         try {
+            meterRegistry.counter("wallet.transfer.total", "status", "init").increment();
 
             walletService.transferOut(fromWalletId, amount, transactionId);
             walletService.transferIn(toWalletId, amount, transactionId);
@@ -61,10 +65,17 @@ public class TransferOrchestrator {
 
             kafkaTemplate.send("transfer.events.success", transactionId);
 
+            // Metric: Transfer Success
+            meterRegistry.counter("wallet.transfer.total", "status", "success").increment();
+
         } catch (BusinessException e) {
             log.error("Transfer failed: {}", e.getMessage());
             rollBackTransfer(transactionId, e.getMessage());
             kafkaTemplate.send("transfer.events.failed", transactionId);
+
+            // Metric: Transfer Failed (Business Rule)
+            meterRegistry.counter("wallet.transfer.total", "status", "failed", "reason", e.getErrorCode().name())
+                    .increment();
             throw e;
         }
 
@@ -72,6 +83,10 @@ public class TransferOrchestrator {
             log.error("Transfer failed: {}", e.getMessage());
             kafkaTemplate.send("transfer.events.failed", transactionId);
             rollBackTransfer(transactionId, e.getMessage());
+
+            // Metric: Transfer Failed (Unexpected)
+            meterRegistry.counter("wallet.transfer.total", "status", "rollback", "reason", "internal_error")
+                    .increment();
             throw new BusinessException(ErrorCode.TRANSACTION_INTERNAL_ERROR);
         }
     }
