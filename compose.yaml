@@ -27,6 +27,8 @@ services:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - SPRING_MAIL_HOST=mailhog
       - SPRING_MAIL_PORT=1025
+      - JWT_SECRET=${JWT_SECRET:-dG9wLXNlY3JldC1rZXktZm9yLWp3dC1zaWduaW5nLTI1Ni1iaXQ=}
+      - JWT_ENCRYPTION_KEY=${JWT_ENCRYPTION_KEY:-MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=}
     depends_on:
       - postgres
       - redis
