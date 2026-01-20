@@ -100,13 +100,23 @@ services:
     ports:
       - "9092:9092"
     environment:
+      # a unique id for each broker
       KAFKA_BROKER_ID: 1
+      # connect to zookeeper
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      # security protocol map
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      # advertised listeners (the address Kafka gives to the client AFTER they connect, telling them where to send future requests.)
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      # listeners (the reception port, if receive from internal, give it internal, if receive from external, give it external)
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      # inter-broker listener name
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      # offsets topic replication factor (only 1 broker, so set to 1)
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      # transaction state log min ISR (only 1 broker, so set to 1)
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      # transaction state log replication factor (only 1 broker, so set to 1)
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
 
   kafka-ui:
