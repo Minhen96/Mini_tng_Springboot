@@ -45,3 +45,6 @@ application-prod.yaml
 
 ### Logs ###
 logs/
+
+### AWS SSH Keys ###
+*.pem
