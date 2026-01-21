@@ -14,6 +14,7 @@ services:
   #   restart: unless-stopped
 
   backend:
+    image: ${DOCKERHUB_USERNAME}/mhpractice:latest
     build: .
     container_name: mhpractice-backend
     ports:
