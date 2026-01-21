@@ -24,6 +24,7 @@ services:
       - SPRING_PROFILES_ACTIVE=prod
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SPRING_MAIL_PROPERTIES_MAIL_SMTP_FROM=noreply@mhpractice.com
       - SPRING_DATA_REDIS_HOST=redis # remove when really use sendgrid
       - SPRING_DATA_REDIS_PORT=6379 # remove when really use sendgrid
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:29092
