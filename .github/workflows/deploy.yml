@@ -62,5 +62,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd mhpractice
-            docker-compose pull
-            docker-compose up -d
+            docker compose pull
+            docker compose --profile prod up --build -d
