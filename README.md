@@ -61,10 +61,9 @@ A Spring Boot microservices-based e-wallet application with production-grade OTP
 
 ### Planned 🔜
 
-- Wallet Service (create wallet, check balance)
-- Transaction Service (transfers, Kafka events)
 - Payment Integration (Stripe)
-- Kafka for event-driven architecture
+- Enhanced Dashboard UI
+- Mobile API optimization
 
 ## 🛠️ Tech Stack
 
@@ -378,6 +377,67 @@ docker-compose down
 - Scheduled tasks in Spring
 - Rate limiting strategies
 - Database schema design
+- CI/CD with GitHub Actions
+- AWS EC2 deployment with Docker
+
+## 🚀 Deployment
+
+### CI/CD with GitHub Actions
+
+This project includes automated deployment via GitHub Actions. On every push to `master`, the pipeline:
+
+1. **Builds** the JAR using Maven
+2. **Builds** a Docker image
+3. **Pushes** the image to Docker Hub
+4. **Deploys** to AWS EC2 via SSH
+
+#### Required GitHub Secrets
+
+| Secret               | Description                      |
+| -------------------- | -------------------------------- |
+| `DOCKERHUB_USERNAME` | Your Docker Hub username         |
+| `DOCKERHUB_TOKEN`    | Docker Hub access token          |
+| `SERVER_IP`          | AWS EC2 public IP address        |
+| `SSH_PRIVATE_KEY`    | Contents of your `.pem` key file |
+
+### AWS EC2 Deployment
+
+**Instance Requirements:**
+- Ubuntu 24.04 LTS
+- Current using `m7i-flex.large` (min 4gb ram)
+- 20GB+ storage
+- Security Group: Ports 22 (SSH), 8088 (API) open
+
+**Initial Server Setup:**
+```bash
+# Install Docker
+curl -fsSL https://get.docker.com | sh
+sudo usermod -aG docker ubuntu
+
+# Create project directory
+mkdir ~/mhpractice && cd ~/mhpractice
+
+# Create .env file with production secrets
+nano .env
+```
+
+**Required `.env` variables on server:**
+```env
+POSTGRES_DB=mhpractice
+POSTGRES_USER=your_user
+POSTGRES_PASSWORD=your_password
+JWT_SECRET=your_64_char_secret
+JWT_ENCRYPTION_KEY=your_32_char_key
+SENDGRID_API_KEY=your_sendgrid_key
+DOCKERHUB_USERNAME=your_dockerhub_user
+```
+
+### Production Access
+
+After deployment:
+- **API**: `http://<server-ip>:8088/api/...`
+- **Grafana**: `http://<server-ip>:3001`
+- **Prometheus**: `http://<server-ip>:9091`
 
 ## 📝 License
 
