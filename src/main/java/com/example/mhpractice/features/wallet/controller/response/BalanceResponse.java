@@ -9,4 +9,5 @@ import lombok.Data;
 @Builder
 public class BalanceResponse {
     private BigDecimal balance;
+    private String walletId;
 }

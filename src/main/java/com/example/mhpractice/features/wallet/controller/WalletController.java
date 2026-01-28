@@ -42,6 +42,7 @@ public class WalletController {
         Wallet currentUserWallet = walletService.getWalletByUserId(currentUser.getId());
         return BalanceResponse.builder()
                 .balance(currentUserWallet.getBalance())
+                .walletId(currentUserWallet.getId().toString())
                 .build();
     }
 
