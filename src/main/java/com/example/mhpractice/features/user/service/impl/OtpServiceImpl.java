@@ -34,6 +34,7 @@ public class OtpServiceImpl implements OtpService {
 
     private final NotificationService notificationService;
 
+    @Transactional
     @Override
     public void requestOtp(String email, OtpPurposes purpose, String ipAddress) {
         User user = userRepository.findByEmail(email)
@@ -105,6 +106,7 @@ public class OtpServiceImpl implements OtpService {
         return true;
     }
 
+    @Transactional
     @Override
     public void resendOtp(String email, OtpPurposes purpose, String ipAddress) {
         User user = userRepository.findByEmail(email)
@@ -119,7 +121,8 @@ public class OtpServiceImpl implements OtpService {
                 .orElseGet(() -> OtpResendTracking.builder()
                         .email(email)
                         .purpose(purpose)
-                        .lastResendAt(LocalDateTime.now())
+                        // .lastResendAt(LocalDateTime.now()) // Do not initialize this, otherwise check
+                        // below will fail
                         .resetAt(LocalDateTime.now().plusMinutes(20))
                         .build());
 

@@ -96,7 +96,7 @@ cd mhpractice
 **Option A: Development Mode (Hybrid)**
 Runs infrastructure in Docker, Backend runs locally (Faster for coding).
 ```bash
-docker-compose up -d
+docker-compose --profile dev up -d
 ```
 
 Run the Application
