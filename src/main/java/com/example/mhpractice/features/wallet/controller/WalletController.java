@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.mhpractice.common.http.annotation.StandardReponseBody;
+import com.example.mhpractice.common.exception.BusinessException;
+import com.example.mhpractice.common.exception.ErrorCode;
 import com.example.mhpractice.features.user.models.User;
 import com.example.mhpractice.features.user.service.UserService;
 import com.example.mhpractice.features.wallet.controller.request.TopupRequest;
@@ -69,6 +71,11 @@ public class WalletController {
         User targetUser = userService.getUserByEmail(request.getEmail());
         Wallet fromWallet = walletService.getWalletByUserId(currentUser.getId());
         Wallet toWallet = walletService.getWalletByUserId(targetUser.getId());
+
+        // Validate balance BEFORE creating transaction record
+        if (!fromWallet.hasSufficientBalance(request.getAmount())) {
+            throw new BusinessException(ErrorCode.INSUFFICIENT_BALANCE);
+        }
 
         String transactionId = UUID.randomUUID().toString();
         initiateTransfer(fromWallet, toWallet, request.getAmount(), transactionId);
