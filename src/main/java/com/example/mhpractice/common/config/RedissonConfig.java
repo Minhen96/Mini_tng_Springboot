@@ -3,6 +3,8 @@ package com.example.mhpractice.common.config;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
+import org.redisson.codec.JsonJacksonCodec;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * class
  */
 @Configuration
+@EnableCaching
 public class RedissonConfig {
 
     @org.springframework.beans.factory.annotation.Value("${spring.data.redis.host:localhost}")
@@ -22,6 +25,7 @@ public class RedissonConfig {
     @Bean(destroyMethod = "shutdown")
     public RedissonClient redissonClient() {
         Config config = new Config();
+        config.setCodec(new JsonJacksonCodec());
         config.useSingleServer()
                 .setAddress("redis://" + redisHost + ":" + redisPort);
         return Redisson.create(config);

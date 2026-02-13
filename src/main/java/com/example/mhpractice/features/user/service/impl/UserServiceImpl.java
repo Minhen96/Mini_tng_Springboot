@@ -1,5 +1,7 @@
 package com.example.mhpractice.features.user.service.impl;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.example.mhpractice.common.exception.BusinessException;
@@ -30,6 +32,7 @@ public class UserServiceImpl implements UserService {
      * @param name
      */
     @Override
+    @Cacheable(value = "userProfile", key = "#email")
     public UserProfileResult getUserProfile(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
@@ -42,6 +45,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = "userProfile", key = "#email")
     public void updateUserProfile(String email, String name) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
