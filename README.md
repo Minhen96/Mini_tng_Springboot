@@ -432,6 +432,61 @@ SENDGRID_API_KEY=your_sendgrid_key
 DOCKERHUB_USERNAME=your_dockerhub_user
 ```
 
+### Local Kubernetes (Minikube) Deployment
+
+For local testing before cloud deployment, you can use Minikube to simulate a Kubernetes environment.
+
+**1. Start Minikube & Load Image**
+```bash
+minikube start
+docker build -t springboot-app:1.0 .
+minikube image load springboot-app:1.0
+```
+
+**2. Deploy to Kubernetes**
+```bash
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+```
+
+**3. Verify**
+```bash
+kubectl get pods
+```
+
+*(Note: The `deployment.yaml` is configured to use `host.docker.internal` so Minikube pods can communicate with local Docker Compose infrastructure like Postgres and Kafka).*
+
+### Enterprise Cloud Deployment (AWS EKS & ECR)
+
+For a production environment, Kubernetes deployments rely on cloud container registries rather than local images.
+
+**1. Push Image to Container Registry (AWS ECR)**
+```bash
+# Login to AWS ECR
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <your-aws-account-id>.dkr.ecr.us-east-1.amazonaws.com
+
+# Tag your local image
+docker tag springboot-app:1.0 <your-aws-account-id>.dkr.ecr.us-east-1.amazonaws.com/mhpractice/springboot-app:1.0
+
+# Push the image to the cloud
+docker push <your-aws-account-id>.dkr.ecr.us-east-1.amazonaws.com/mhpractice/springboot-app:1.0
+```
+
+**2. Update `deployment.yaml`**
+*   Update `image:` to point directly to your ECR URL: `<your-aws-account-id>.dkr.ecr.us-east-1.amazonaws.com/mhpractice/springboot-app:1.0`
+*   Change `imagePullPolicy: Never` to `imagePullPolicy: Always`
+*   Update your Database/Kafka/Redis URLs from `host.docker.internal` to the actual cloud provider endpoints (e.g., AWS RDS endpoint, AWS ElastiCache endpoint).
+
+**3. Deploy to EKS**
+```bash
+# Connect kubectl to your AWS EKS cluster
+aws eks update-kubeconfig --region us-east-1 --name my-cluster-name
+
+# Apply the manifests
+kubectl apply -f deployment.yaml
+kubectl apply -f service.yaml
+```
+
 ### Production Access
 
 After deployment:
