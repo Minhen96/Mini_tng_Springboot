@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: springboot-app
+  template:
+    metadata:
+      labels:
+        app: springboot-app
+    spec:
+      containers:
+        - name: app
+          image: minhen/springboot-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8088
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://host.docker.internal:5435/mhpractice
+            - name: SPRING_DATASOURCE_USERNAME
+              value: minhen
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: minhen
+            - name: SPRING_DATA_REDIS_HOST
+              value: host.docker.internal
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6380"
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: host.docker.internal:9092
+            - name: SPRING_KAFKA_CONSUMER_GROUP_ID
+              value: wallet-service-group
+            - name: JWT_SECRET
+              value: dG9wLXNlY3JldC1rZXktZm9yLWp3dC1zaWduaW5nLTI1Ni1iaXQ=
+            - name: JWT_ENCRYPTION_KEY
+              value: MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=
+            - name: SPRING_MAIL_HOST
+              value: host.docker.internal
+            - name: SPRING_MAIL_PORT
+              value: "1026"

@@ -121,7 +121,7 @@ services:
       # security protocol map
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       # advertised listeners (the address Kafka gives to the client AFTER they connect, telling them where to send future requests.)
-      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:29092,EXTERNAL://host.docker.internal:9092
       # listeners (the reception port, if receive from internal, give it internal, if receive from external, give it external)
       KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
       # inter-broker listener name
